@@ -21,13 +21,26 @@ public class LoginUIHelper : MonoBehaviour
 
     private void OnLoginButtonPressed()
     {
-        JSONArray data = new JSONArray();
-        
-        data["username"] = usernameInputField.text;
-        data["password"] = passwordInputField.text;
+        string json; 
+        string username = usernameInputField.textComponent.text;
+        string password = passwordInputField.text;
 
-        Debug.Log(data.ToString());
+        json = "{'username': '" + username + "', " +
+               "'password': '" + password +
+               "'}";
+
+        Debug.Log("username: " + usernameInputField.textComponent.text + " password: " + passwordInputField.text);
+        Debug.Log(json);
         
-        JSONNode response = ApiHandler.singleton.SendApiRequest(ApiHandler.RequestType.POST, "user/authenticate", (string) data.ToString());
+        JSONNode response = ApiHandler.singleton.SendApiRequest(ApiHandler.RequestType.POST, "user/authenticate", json);
+
+        if (response == null) 
+        {
+            Debug.Log("account access is invalid");
+        }
+        else
+        {
+            Debug.Log("nice id, you can pass sire");
+        }
     }
 }
