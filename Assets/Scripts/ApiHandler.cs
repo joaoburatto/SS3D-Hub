@@ -13,16 +13,14 @@ public class ApiHandler : MonoBehaviour
 {
     public static ApiHandler singleton { get; private set; }
     
+    // responsable for requests
     private static readonly HttpClient HttpClient;
-    
-    public string secret;
-
+ 
     public string apiUrl;
     
     public static event System.Action ApiRequestSent;
     public static event System.Action<string> ApiResponseReceived;
-    
-    
+
     public enum RequestType
     {
         GET = 0,
@@ -45,45 +43,45 @@ public class ApiHandler : MonoBehaviour
         StartCoroutine(HeartbeatCoroutine());
     }
 
+    /// <summary>
+    /// Sends an request to the Hub API (CentCom).
+    /// </summary>
+    /// <param name="type">Request type (GET, POST, PUT...)</param>
+    /// <param name="path">The API url path (ie: "users/login""</param>
+    /// <param name="formData">The data that is in the body of the request, should always be a JSON</param>
+    /// <returns></returns>
     public JSONNode SendApiRequest(RequestType type, string path, string formData = null)
     {
         UnityWebRequest request = new UnityWebRequest();
         
         path = apiUrl + path;
         var body = formData;
-        
-        //body = JsonUtility.ToJson(body);
-        //StringContent httpContent = new StringContent(body, System.Text.Encoding.UTF8, "application/json");
 
-        
         switch (type)
         {
             case RequestType.GET:
                 request = UnityWebRequest.Get(path);
                 break;
             case RequestType.POST:
+                // this code ensures the data is send properly to the API
                 request.url = path;
                 request.method = "post";
                 request.downloadHandler = new DownloadHandlerBuffer();
                 request.uploadHandler = new UploadHandlerRaw(string.IsNullOrEmpty(JsonUtility.ToJson(body)) ? null : Encoding.UTF8.GetBytes(body));
-                
-                Debug.Log(body);
                 request.SetRequestHeader("Accept", "application/json");
                 request.SetRequestHeader("Content-Type", "application/json; charset=UTF-8");
                 break;
         }
         
-        //UploadHandler customUploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes(formData));
-        //request.uploadHandler = customUploadHandler;
         request.SendWebRequest();
-        ApiRequestSent.Invoke();
+        ApiRequestSent?.Invoke();
 
         while (!request.isDone) { } //Debug.Log("just wait bro"); // ah yes, wait functions  
 
         if (request.isNetworkError) Debug.Log(request.error);
 
+        // transforms the received data into a JSON object
         JSONNode data = JSON.Parse(request.downloadHandler.text);
-
         
         string formString = "";
         if (formData.Length > 0)
@@ -99,21 +97,23 @@ public class ApiHandler : MonoBehaviour
         Debug.Log("Form: " + formString);
         Debug.Log("Result: " + dataString);
 
+        
+        // in case we get an error message
         if (request.responseCode == 400)
-        {
             return null;
-        }
-        ApiResponseReceived.Invoke(data["message"]);
+        
+        ApiResponseReceived?.Invoke(data["message"]);
         return data;
     }
 
+    /// <summary>
+    /// A request send every second to check the API status
+    /// </summary>
     private IEnumerator HeartbeatCoroutine()
     {
         while (true)
         {
-            // API heartbeat test (is it on?)
             JSONNode response = SendApiRequest(ApiHandler.RequestType.GET, "heartbeat");
-            //Debug.Log(response["message"]);
             yield return new WaitForSeconds(1);  
         }
     }

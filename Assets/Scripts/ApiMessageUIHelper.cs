@@ -1,9 +1,14 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// Receives API events and manages what to do with them
+/// </summary>
 public class ApiMessageUIHelper : MonoBehaviour
 {
-    public Animator animation;
+    public Animator animator;
+    
+    // TODO: message handler, a little notification tray
     public GameObject messagePrefab;
     public Transform messageHolder;
 
@@ -15,14 +20,18 @@ public class ApiMessageUIHelper : MonoBehaviour
 
     private void OnApiResponseReceived(string message)
     {
-        animation.SetBool("Toggle", false);
+        animator.SetBool("Toggle", false);
         Debug.Log(message);
     }
 
     private void OnApiRequestSent()
     {
-        animation.SetBool("Toggle", true);
+        animator.SetBool("Toggle", true);
     }
-    
-    
+
+    private void OnDestroy()
+    {
+        ApiHandler.ApiResponseReceived -= OnApiResponseReceived;
+        ApiHandler.ApiRequestSent -= OnApiRequestSent;
+    }
 }

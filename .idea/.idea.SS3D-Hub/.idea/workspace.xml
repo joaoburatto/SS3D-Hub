@@ -9,10 +9,10 @@
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
+      <option value="$PROJECT_DIR$/Assets/ApiMessageUIHelper.cs" />
+      <option value="$PROJECT_DIR$/Assets/ApiHandler.cs" />
       <option value="$PROJECT_DIR$/Assets/LoginUIHelper.cs" />
       <option value="$PROJECT_DIR$/Assets/LocalClientData.cs" />
-      <option value="$PROJECT_DIR$/Assets/ApiHandler.cs" />
-      <option value="$PROJECT_DIR$/Assets/ApiMessageUIHelper.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="21kGGuDyApD3Tu8IdldYMhPz45O" />
