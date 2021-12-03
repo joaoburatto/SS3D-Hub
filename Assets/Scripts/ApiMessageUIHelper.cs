@@ -15,17 +15,21 @@ public class ApiMessageUIHelper : MonoBehaviour
     private void Start()
     {
         ApiHandler.ApiResponseReceived += message => OnApiResponseReceived(message);
-        ApiHandler.ApiRequestSent += OnApiRequestSent;
+        ApiHandler.ApiRequestSent += message => OnApiRequestSent(message);
+
+        animator.enabled = false;
     }
 
     private void OnApiResponseReceived(string message)
     {
+        animator.enabled = true;
         animator.SetBool("Toggle", false);
         Debug.Log(message);
     }
 
-    private void OnApiRequestSent()
+    private void OnApiRequestSent(string message)
     {
+        animator.enabled = true;
         animator.SetBool("Toggle", true);
     }
 

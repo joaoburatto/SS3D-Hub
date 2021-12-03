@@ -18,8 +18,10 @@ public class ApiHandler : MonoBehaviour
  
     public string apiUrl;
     
-    public static event System.Action ApiRequestSent;
+    public static event System.Action<string> ApiRequestSent;
     public static event System.Action<string> ApiResponseReceived;
+    public static event System.Action<int> ApiConnectionLost;
+    private int ApiTimeoutSeconds = 0;
 
     public enum RequestType
     {
@@ -50,21 +52,21 @@ public class ApiHandler : MonoBehaviour
     /// <param name="path">The API url path (ie: "users/login""</param>
     /// <param name="formData">The data that is in the body of the request, should always be a JSON</param>
     /// <returns></returns>
-    public JSONNode SendApiRequest(RequestType type, string path, string formData = null)
+    public JSONNode SendApiRequest(RequestType type, string path, string formData = null, bool ignoreMessageSystem = false)
     {
         UnityWebRequest request = new UnityWebRequest();
         
-        path = apiUrl + path;
+        string fullPath = apiUrl + path;
         var body = formData;
 
         switch (type)
         {
             case RequestType.GET:
-                request = UnityWebRequest.Get(path);
+                request = UnityWebRequest.Get(fullPath);
                 break;
             case RequestType.POST:
                 // this code ensures the data is send properly to the API
-                request.url = path;
+                request.url = fullPath;
                 request.method = "post";
                 request.downloadHandler = new DownloadHandlerBuffer();
                 request.uploadHandler = new UploadHandlerRaw(string.IsNullOrEmpty(JsonUtility.ToJson(body)) ? null : Encoding.UTF8.GetBytes(body));
@@ -74,35 +76,34 @@ public class ApiHandler : MonoBehaviour
         }
         
         request.SendWebRequest();
-        ApiRequestSent?.Invoke();
+        if (!ignoreMessageSystem)
+            ApiRequestSent?.Invoke(fullPath);
 
         while (!request.isDone) { } //Debug.Log("just wait bro"); // ah yes, wait functions  
 
-        if (request.isNetworkError) Debug.Log(request.error);
-
+        if (request.isNetworkError)
+        {
+            if (path.Equals("heartbeat"))
+            {
+                Debug.Log(request.error);
+                ApiTimeoutSeconds++;
+                ApiConnectionLost?.Invoke(ApiTimeoutSeconds);
+            }
+        }
+        else
+        {
+            ApiTimeoutSeconds = 0;
+        }
+        
         // transforms the received data into a JSON object
         JSONNode data = JSON.Parse(request.downloadHandler.text);
-        
-        string formString = "";
-        if (formData.Length > 0)
-        {
-            foreach (var value in body)
-                formString += value;
-        }
 
-        string dataString = "";
-        foreach (var value in data)
-            dataString += value;
-
-        Debug.Log("Form: " + formString);
-        Debug.Log("Result: " + dataString);
-
-        
         // in case we get an error message
         if (request.responseCode == 400)
             return null;
         
-        ApiResponseReceived?.Invoke(data["message"]);
+        if (!ignoreMessageSystem)
+            ApiResponseReceived?.Invoke(data["message"]);
         return data;
     }
 
@@ -113,8 +114,10 @@ public class ApiHandler : MonoBehaviour
     {
         while (true)
         {
-            JSONNode response = SendApiRequest(ApiHandler.RequestType.GET, "heartbeat");
-            yield return new WaitForSeconds(1);  
+            JSONNode response = SendApiRequest(ApiHandler.RequestType.GET, "heartbeat", null, true);
+            Debug.Log(response["message"]);
+            
+            yield return new WaitForSeconds(1);
         }
     }
     

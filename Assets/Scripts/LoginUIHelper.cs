@@ -33,7 +33,7 @@ public class LoginUIHelper : MonoBehaviour
         var json = "{'username': '" + username + "', " + "'password': '" + password + "'}";
         Debug.Log(json);
         
-        JSONNode response = ApiHandler.singleton.SendApiRequest(ApiHandler.RequestType.POST, "user/authenticate", json);
+        JSONNode response = ApiHandler.singleton.SendApiRequest(ApiHandler.RequestType.POST, "user/authenticate",json);
         
         // TODO: User validation and local client data
         if (response == null)
