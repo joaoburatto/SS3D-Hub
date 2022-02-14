@@ -16,6 +16,23 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/LoginUIHelper.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/ApiMessageUIHelper.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/ApiHandler.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Core/Scenes.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Core/SceneLoader.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Api/ApiMessageUIHelper.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Utils/SimpleJSON.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Utils/JSON.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Utils/JsonRequestBuilder.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Utils/Singleton.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Core/SavefileManager.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Core/GameManager.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Utils/LocalClientData.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Core/UserDataSaveManager.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Utils/JsonRequest.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Api/ApiRequestProcessingUIHelper.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/UI Helper/LoginUIHelper.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Api/ApiHandler.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Api/SS3DRequests.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/EventChannel/UserLoginEventChannel.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="21kGGuDyApD3Tu8IdldYMhPz45O" />

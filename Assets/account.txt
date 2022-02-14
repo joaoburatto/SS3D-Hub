@@ -1,0 +1,1 @@
+{"Username":"janitor","Ckey":"3","Token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6WyIzIiwiamFuaXRvciJdLCJuYmYiOjE2NDA2NDM3MDMsImV4cCI6MTY0MDczMDEwMywiaWF0IjoxNjQwNjQzNzAzfQ.L88poQ2TZ6r__hObzYLkV3mgJZviQLXf1H5IvzwV9WI"}
